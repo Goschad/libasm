@@ -3,6 +3,8 @@ bits 64
 %define SYS_READ 0
 %define _ERROR -1
 
+extern __errno_location
+
 section .text
     global ft_read
 
@@ -14,5 +16,6 @@ ft_read:
     ret
 
 _error:
+    call __errno_location WRT ..plt
     mov rax, _ERROR
     ret

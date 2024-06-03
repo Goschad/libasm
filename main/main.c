@@ -11,7 +11,7 @@
 
 void strdup_test(void)
 {
-    printf("\n=== strdup ===\n");
+    printf("\n=== strdup ===\n\n");
 	{
 		char *s = "Hello World !";
 		char *ret1 = strdup(s);
@@ -53,7 +53,7 @@ void strdup_test(void)
 
 static void strcpy_test(void)
 {
-    printf("\n=== strcpy ===\n");
+    printf("\n=== strcpy ===\n\n");
 	{
 	    printf("STD:\n");
 	    char *src = "Hello World";
@@ -80,7 +80,7 @@ static void strcpy_test(void)
 
 static void strcmp_test(void)
 {
-    printf("\n=== strcmp ===\n");
+    printf("\n=== strcmp ===\n\n");
     {
         printf("STD:\n");
         char *ret1 = "Hello World !";
@@ -135,7 +135,7 @@ static void strcmp_test(void)
 
 static void strlen_test(void)
 {
-    printf("\n=== strcmp ===\n");
+    printf("\n=== strlen ===\n\n");
     {
         printf("STD:\n");
         char *ret1 = "Hello World !";
@@ -186,7 +186,7 @@ static void strlen_test(void)
 
 static void write_test(void)
 {
-    printf("\n=== write ===\n");
+    printf("\n=== write ===\n\n");
     {
         write(1, "STD:\n", 5);
         int fd = STDOUT_FILENO;
@@ -293,21 +293,121 @@ static void write_test(void)
 
 static void read_test()
 {
-    printf("\n=== read ===\n");
+    printf("=== read ===\n");
     {
+        int errno = 0;
+        int fd = open(NL_FILE, O_RDONLY);
+	    char std_buffer[11];
+	    char ft_buffer[11];
+        ssize_t res1;
+        ssize_t res2;
 
+        printf("\n[%s]\n", NL_FILE);
+	    res1 = read(fd, std_buffer, 10);
+        printf("STD: %s\n", strerror(errno));
+	    lseek(fd, 0, SEEK_SET);
+	    res2 = ft_read(fd, ft_buffer, 10);
+        printf("FT: %s\n", strerror(errno));
+	    printf("std: %ld | ft: %ld\n", res1, res2);
+	    std_buffer[res1] = '\0';
+	    ft_buffer[res2] = '\0';
+	    printf("std_buffer: [%s] | ft_buffer: [%s]\n\n", std_buffer, ft_buffer);
+        close(fd);
     }
     {
+        int errno = 0;
+        int fd = open(LITTLE_LOREM, O_RDONLY);
+	    char std_buffer[21];
+	    char ft_buffer[21];
+        ssize_t res1;
+        ssize_t res2;
+
+        printf("[%s]\n", LITTLE_LOREM);
+	    res1 = read(fd, std_buffer, 20);
+        printf("STD: %s\n", strerror(errno));
+	    lseek(fd, 0, SEEK_SET);
+	    res2 = ft_read(fd, ft_buffer, 20);
+        printf("FT: %s\n", strerror(errno));
+	    printf("std: %ld | ft: %ld\n", res1, res2);
+	    std_buffer[res1] = '\0';
+	    ft_buffer[res2] = '\0';
+	    printf("std_buffer: [%s] | ft_buffer: [%s]\n\n", std_buffer, ft_buffer);
+        close(fd);
+    }
+    {
+        int errno = 0;
+        int fd = open(EMPT, O_RDONLY);
+	    char std_buffer[21];
+	    char ft_buffer[21];
+        ssize_t res1;
+        ssize_t res2;
+
+        printf("[%s]\n", EMPT);
+	    res1 = read(fd, std_buffer, 20);
+        printf("STD: %s\n", strerror(errno));
+	    lseek(fd, 0, SEEK_SET);
+	    res2 = ft_read(fd, ft_buffer, 20);
+        printf("FT: %s\n", strerror(errno));
+	    printf("std: %ld | ft: %ld\n", res1, res2);
+	    std_buffer[res1] = '\0';
+	    ft_buffer[res2] = '\0';
+	    printf("std_buffer: [%s] | ft_buffer: [%s]\n\n", std_buffer, ft_buffer);
+        close(fd);
+    }
+    {
+        int errno = 0;
+        int fd = open(NL_FILE, O_RDONLY);
+	    char std_buffer[11];
+	    char ft_buffer[11];
+        ssize_t res1;
+        ssize_t res2;
         
+        printf("[%s]\n", "fd = 400");
+	    res1 = read(400, std_buffer, 10);
+		printf("STD: %s\n", strerror(errno));
+	    res2 = ft_read(400, ft_buffer, 10);
+		printf("FT: %s\n", strerror(errno));
+	    printf("std: %ld | ft: %ld\n", res1, res2);
+
+	    if (res1 != -1)
+	        std_buffer[res1] = '\0';
+	    if (res2 != -1)
+	        ft_buffer[res2] = '\0';
+	    if (res1 != -1 && res2 != -1)
+	        printf("std_buffer: [%s] | ft_buffer: [%s]\n", std_buffer, ft_buffer);
+    }
+    {
+        /* warning */
+
+        /*int errno = 0;
+        int fd = open(ALPH, O_RDONLY);
+	    char std_buffer[27];
+	    char ft_buffer[27];
+        ssize_t res1;
+        ssize_t res2;
+
+        printf("[%s]\n", ALPH);
+	    res1 = read(fd, std_buffer, 40);
+        printf("STD: %s\n", strerror(errno));
+	    lseek(fd, 0, SEEK_SET);
+	    res2 = ft_read(fd, ft_buffer, 40);
+        printf("FT: %s\n", strerror(errno));
+	    printf("std: %ld | ft: %ld\n", res1, res2);
+	    std_buffer[res1] = '\0';
+	    ft_buffer[res2] = '\0';
+	    printf("std_buffer: [%s] | ft_buffer: [%s]\n\n", std_buffer, ft_buffer);
+        close(fd);*/
     }
 }
+
+/* Test */
 
 int main(void)
 {
     read_test();
-    //write_test();
-    //strlen_test();
-    // strcmp_test();
-    // strcpy_test();
-    // strdup_test();
+    write_test();
+    /*strlen_test();
+    strcmp_test();
+    strcpy_test();
+    strdup_test();*/
 }

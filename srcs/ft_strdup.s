@@ -12,6 +12,8 @@ ft_strdup:
     push rdi
     mov rdi, rax
     call malloc WRT ..plt
+    cmp rax, 0
+    je _error
     pop rdi
     mov rdx, -1
     mov rbx, rax
@@ -25,4 +27,8 @@ ft_strdup:
     .done:
     mov byte [rbx + rdx], 0x0
     mov rax, rbx
+    ret
+
+_error:
+    mov rax, 0
     ret
