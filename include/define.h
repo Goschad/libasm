@@ -68,11 +68,12 @@
 
 /* define file name */
 
-#define ALPH "./file/alphabet.txt"
-#define EMPT "./file/empty.txt"
-#define NL_FILE "./file/with_nl.txt"
-#define WRIT "./file/write_test.txt"
-#define LITTLE_LOREM "./file/little_lorem.txt"
-#define ERROR "K-DEUX A-R-I-S-M"
+#define ALPH "./file/read/alphabet.txt"
+#define EMPT "./file/read/empty.txt"
+#define NL_FILE "./file/read/with_nl.txt"
+#define WRITE_STD "./file/write/std_write.txt"
+#define WRITE_FT "./file/write/ft_write.txt"
+#define LITTLE_LOREM "./file/read/little_lorem.txt"
+#define ERROR "./K-DEUX A-R-I-S-M"
 
 #endif

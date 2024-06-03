@@ -12,7 +12,7 @@ ft_strcpy:
         je .done
         inc rsi
         inc rdi
-    jnz .copy
+        jnz .copy
     .done:
     pop rdi
     mov rax, rdi

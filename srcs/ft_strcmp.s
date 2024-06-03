@@ -1,25 +1,20 @@
 bits 64
 
-%define _ERROR -1
-
 section .text
     global ft_strcmp
 
 ft_strcmp:
-    .loop:      
-        mov al, [rsi]
-        mov bl, [rdi]
+    .loop:
+        mov al, [rdi]
+        mov bl, [rsi]
         cmp al, bl
-        jne _is_false
+        jne .done
         inc rsi
         inc rdi
-        cmp byte [rsi], 0
-        je .done
+        test al, al
+        jz .done 
         jmp .loop
-    .done:  
-    mov rax, 0
-    ret
-
-_is_false:
-    mov rax, _ERROR
+    .done:
+    sub al, bl
+    movsx rax, al
     ret

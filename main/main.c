@@ -7,293 +7,307 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-/* other */
+/* strdup */
 
-static char *alloc(int size, char *str)
+void strdup_test(void)
 {
-    char *new;
+    printf("\n=== strdup ===\n");
+	{
+		char *s = "Hello World !";
+		char *ret1 = strdup(s);
+		char *ret2 = ft_strdup(s);
 
-    new = NULL;
-    if (str)
-        free(str);
-    new = malloc((size + 1) * sizeof(char));
-    if (!new)
-        return (NULL);
-    return (new);
-}
+		printf("STD: [%s] | FT: [%s]\n", ret1, ret2);
+		free(ret1); free(ret2);
+	}
+    {
+        char *s = "";
+		char *ret1 = strdup(s);
+		char *ret2 = ft_strdup(s);
 
-static void fill(int size, char *str, char c)
-{
-    int i;
+		printf("STD: [%s] | FT: [%s]\n", ret1, ret2);
+		free(ret1); free(ret2);
+    }
+    {
+        char *s = LOREM;
+		char *ret1 = strdup(s);
+		char *ret2 = ft_strdup(s);
 
-    i = 0;
-    while (i <= size)
-        str[i++] = c;
-}
+		printf("STD && FT: lorem | strcmp: %d\n", strcmp(ret1, ret2));
+		free(ret1); free(ret2);
+    }
+    {
+        /* segfault */
 
-/* strlen */
+        /*char *s = NULL;
+		char *ret1 = strdup(s);
+		char *ret2 = ft_strdup(s);
 
-static void strlen_test(void)
-{
-    int len;
-    int asm_len;
-
-    printf(" __[ strlen ]__\n|\n");
-
-    /* segfault (strlen same reaction)*/
-
-    /*len = strlen(NULL); 
-    asm_len = ft_strlen(NULL); 
-    printf("NULL => %d\n", len);
-    printf(" asm NULL => %d\n\n", asm_len); */
-
-    len = strlen(EMPTY); 
-    asm_len = ft_strlen(EMPTY); 
-    printf("| EMPTY => %d\n", len);
-    printf("| asm EMPTY => %d\n|\n", asm_len);
-
-    len = strlen(WORD); 
-    asm_len = ft_strlen(WORD); 
-    printf("| WORD => %d\n", len);
-    printf("| asm WORD => %d\n|\n", asm_len);
-
-    len = strlen(NUM); 
-    asm_len = ft_strlen(NUM); 
-    printf("| NUM => %d\n", len);
-    printf("| asm NUM => %d\n|\n", asm_len);
-
-    len = strlen(NL); 
-    asm_len = ft_strlen(NL); 
-    printf("| NL => %d\n", len);
-    printf("| asm NL => %d\n|\n", asm_len);
-
-    len = strlen(LOREM); 
-    asm_len = ft_strlen(LOREM); 
-    printf("| LOREM => %d\n", len);
-    printf("| LOREM => %d\n", asm_len);
+		printf("STD: [%s]\n", ret1);
+        printf("FT:  [%s]\n", ret2);
+		free(ret1); free(ret2);*/
+    }
 }
 
 /* strcpy */
 
 static void strcpy_test(void)
 {
-    char dst[] = "dst";
-    char src[] = "src";
+    printf("\n=== strcpy ===\n");
+	{
+	    printf("STD:\n");
+	    char *src = "Hello World";
+	    char dest[200];
 
-    char dst_asm[7] = "dst_asm";
-    char src_asm[7] = "src_asm";
-    char *as = malloc(7);
-
-    printf(" __[ strcpy ]__\n|\n");
-
-    /* segfault */
-
-    /* printf("| WORD => %s\n", strcpy(dst, NULL);
-    printf("| WORD => %s\n", strcpy(NULL, src); */
-
-    as = ft_strcpy(dst_asm, src_asm);
-    printf("%s\n", as);
-}
-
-/* write */
-
-static void write_test(void)
-{
-    int fd;
-    int i = 0;
-
-    printf(" __[ write ]__\n|\n");
-
-    i = write(1, "Hello_world !\n", 14);
-    printf("| write value => %d\n", i);
-
-    i = ft_write(1, "Hello_world !\n", 14);
-    printf("| ft_write value => %d\n", i);
-
-    i = write(667, "Fd error\n", 9);
-    printf("| write value => %d\n", i);
-
-    i = ft_write(667, "Fd error\n", 9);
-    printf("| ft_write value => %d\n", i);
-
-    i = write(1, "| line to\n long\n", 10);
-    printf("| write value => %d\n", i);
-
-    i = ft_write(1, "| line to\n long\n", 10);
-    printf("| ft_write value => %d\n", i);
-
-    /* Same error i = write(1, "| waaaaaaaaaaaaaaaaaaaa!", 777);
-    printf("| write value => %d\n", i);
-
-    i = ft_write(1, "| waaaaaaaaaaaaaaaaaaaa!", 777);
-    printf("| ft_write value => %d\n", i); */
-
-    fd = open("./main/write_test.txt", O_WRONLY | O_CREAT | O_TRUNC, 0666);
-    if (!fd)
-        return ;
-    ft_write(fd, "Hello_World !\n", 14);
-    close(fd);
-}
-
-/* read */
-
-static void read_test()
-{
-    int fd;
-    int status;
-    char *buffer;
-    char *ft_buffer;
-
-    fd = 0;
-    status = 0;
-    buffer = NULL;
-    ft_buffer = NULL;
-
-    printf(" __[ read ]__\n|\n");
-
-    /* first */
-
-    buffer = alloc(13, NULL);
-    ft_buffer = alloc(13, NULL);
-    fd = open(ALPH, O_RDONLY);
-    if (fd < 0)    
-        return ;
-    status = read(fd, buffer, 13);
-    if (status != -1)
-        buffer[status] = '\0';
-    printf("| buffer => %c%s%c\n| status =>  %d\n", '\"', buffer, '\"', status);
-    status = ft_read(fd, ft_buffer, 13);
-    if (status != -1)
-        buffer[status] = '\0';
-    printf("| ft_buffer => %c%s%c\n| status =>  %d\n", '\"', ft_buffer, '\"', status);
-    close(fd);
-
-    /* seconde */
-
-    buffer = alloc(10, buffer);
-    ft_buffer = alloc(10, ft_buffer);
-    fd = open(ERROR, O_RDONLY);
-    status = read(fd, buffer, 10);
-    printf("| buffer => %c%s%c\n| status =>  %d\n", '\"', buffer, '\"', status);
-    status = ft_read(fd, ft_buffer, 10);
-    printf("| ft_read => %c%s%c\n| status =>  %d\n", '\"', ft_buffer, '\"', status);
-    fill(10, buffer, '\0');
-    fill(10, ft_buffer, '\0');
-
-    /* third */
-
-    buffer = alloc(64, buffer);
-    ft_buffer = alloc(64, ft_buffer);
-    fd = open(EMPT, O_RDONLY);
-    if (fd < 0)    
-        return ;
-    status = read(fd, buffer, 64);
-    if (status != -1)
-        buffer[status] = '\0';
-    printf("| read => %c%s%c\n| status =>  %d\n", '\"', buffer, '\"', status);
-    status = ft_read(fd, ft_buffer, 64);
-    if (status != -1)
-        ft_buffer[status] = '\0';
-    printf("| ft_read => %c%s%c\n| status =>  %d\n", '\"', ft_buffer, '\"', status);
-    close(fd);
-    fill(64, buffer, '\0');
-    fill(64, ft_buffer, '\0');
-
-    /* four */
-
-    buffer = alloc(20, buffer);
-    ft_buffer = alloc(20, ft_buffer);
-    fd = open(NL_FILE, O_RDONLY);
-    if (fd < 0)    
-        return ;
-    status = read(fd, buffer, 20);
-    if (status != -1)
-        buffer[status] = '\0';
-    printf("| read => %c%s%c\n| status =>  %d\n", '\"', buffer, '\"', status);
-    status = ft_read(fd, ft_buffer, 20);
-    if (status != -1)
-        ft_buffer[status] = '\0';
-    printf("| ft_read => %c%s%c\n| status =>  %d\n", '\"', ft_buffer, '\"', status);
-    close(fd);
-
-    /* five */
-
-    buffer = alloc(667, buffer);
-    ft_buffer = alloc(667, ft_buffer);
-    fd = open(LITTLE_LOREM, O_RDONLY);
-    if (fd < 0)    
-        return ;
-    status = read(fd, buffer, 667);
-    if (status != -1)
-        buffer[status] = '\0';
-    printf("| read => %c%s%c\n| status =>  %d\n", '\"', buffer, '\"', status);
-    status = ft_read(fd, ft_buffer, 667);
-    if (status != -1)
-        ft_buffer[status] = '\0';
-    printf("| ft_read => %c%s%c\n| status =>  %d\n", '\"', ft_buffer, '\"', status);
-    close(fd);
-    fill(667, buffer, '\0');
-    fill(667, ft_buffer, '\0');
-
-    /* six */
-
-    char c = -1;
-
-    free(buffer);
-    free(ft_buffer);
-    fd = open(LITTLE_LOREM, O_RDONLY);
-    status = read(fd, &c, 1);
-    printf("| c => %c%c%c\n| status =>  %d\n", '\'', c, '\'', status);
-    status = ft_read(fd, &c, 1);
-    printf("| c => %c%c%c\n| status =>  %d\n", '\'', c, '\'', status);
-
-    /* error */
-
-    /*status = read(fd, &c, 46);
-    printf("| read => %c%c%c\n| status =>  %d\n", '\'', c, '\'', status);*/
-
-    /*status = ft_read(fd, &c, 46);
-    printf("| ft_read => %c%c%c\n| status =>  %d\n", '\'', c, '\'', status);*/
-
-    close(fd);
+	    char * ret = strcpy(dest, src);
+	    printf("src : [%s] [%p]\n", src, src);
+	    printf("dest : [%s] | ret = [%s]\n", dest, ret);
+	    printf("dest : [%p] | ret = [%p]\n", dest, ret);
+	}
+	{
+	    printf("\nFT:\n");
+	    char *src = "Hello World";
+	    char dest[200];
+        
+	    char * ret = ft_strcpy(dest, src);
+	    printf("src : [%s] [%p]\n", src, src);
+	    printf("dest : [%s] | ret = [%s]\n", dest, ret);
+	    printf("dest : [%p] | ret = [%p]\n", dest, ret);
+	}
 }
 
 /* strcmp */
 
 static void strcmp_test(void)
 {
-    printf(" __[ strcmp ]__\n|\n");
+    printf("\n=== strcmp ===\n");
+    {
+        printf("STD:\n");
+        char *ret1 = "Hello World !";
+        char *ret2 = "Hello Wordk !";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, strcmp(ret1, ret2));
 
-    printf("| Hello_word vs Hello_word\n");
-    if (!strcmp("Hello_word", "Hello_word"))
-        printf("| strcmp == true == %d\n", strcmp("Hell_word", "Hello_word"));
-    if (1)
-        printf("| ft_strcmp == true == %d\n", ft_strcmp("Hello_word", "Hello_word"));
+        ret1 = "Prout !";
+        ret2 = "Ouaf !";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, strcmp(ret1, ret2));
+
+        ret1 = "";
+        ret2 = "Bing chilling - John Xina";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, strcmp(ret1, ret2));
+
+        ret1 = "Miaou !";
+        ret2 = "Miaou !";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, strcmp(ret1, ret2));
+
+        /* segfault */
+
+        /*ret1 = NULL;
+        ret2 = NULL;
+        printf("[%s] && [%s] = %d\n", ret1, ret2, strcmp(ret1, ret2));*/
+    }
+    {
+        printf("\nFT:\n");
+        char *ret1 = "Hello World !";
+        char *ret2 = "Hello Wordk !";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, ft_strcmp(ret1, ret2));
+
+        ret1 = "Prout !";
+        ret2 = "Ouaf !";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, ft_strcmp(ret1, ret2));
+
+        ret1 = "";
+        ret2 = "Bing chilling - John Xina";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, ft_strcmp(ret1, ret2));
+
+        ret1 = "Miaou !";
+        ret2 = "Miaou !";
+        printf("[%s] && [%s]: %d\n", ret1, ret2, ft_strcmp(ret1, ret2));
+
+        /* segfault */
+        
+        /*ret1 = NULL;
+        ret2 = NULL;
+        printf("[%s] && [%s] = %d\n", ret1, ret2, ft_strcmp(ret1, ret2));*/
+    }
 }
 
-/* strdup */
+/* strlen */
 
-void strdup_test(void)
+static void strlen_test(void)
 {
-    char *as_dup;
-    char *dup;
+    printf("\n=== strcmp ===\n");
+    {
+        printf("STD:\n");
+        char *ret1 = "Hello World !";
+        printf("[%s]: %ld\n", ret1, strlen(ret1));
 
-    dup = NULL;
-    as_dup = NULL;
-    dup = strdup("test");
-    printf("strdup => %s\n", dup);
-    as_dup = ft_strdup("test");
-    // printf("ft_strdup => %s\n", as_dup);
-    free(dup);
-    free(as_dup);
+        ret1 = "Read Berserk";
+        printf("[%s]: %ld\n", ret1, strlen(ret1));
+
+        ret1 = WORD;
+        printf("[%s]: %ld\n", ret1, strlen(ret1));
+
+        ret1 = "";
+        printf("[%s]: %ld\n", ret1, strlen(ret1));
+
+        ret1 = LOREM;
+        printf("lorem: %ld\n", strlen(ret1));
+
+        /* segfault */
+
+        /*ret1 = NULL;
+        printf("[%s]: %ld\n", ret1, strlen(ret1));*/
+    }
+    {
+        printf("\nFT:\n");
+        char *ret1 = "Hello World !";
+        printf("[%s]: %ld\n", ret1, ft_strlen(ret1));
+
+        ret1 = "Read Berserk";
+        printf("[%s]: %ld\n", ret1, ft_strlen(ret1));
+
+        ret1 = WORD;
+        printf("[%s]: %ld\n", ret1, ft_strlen(ret1));
+
+        ret1 = "";
+        printf("[%s]: %ld\n", ret1, ft_strlen(ret1));
+
+        ret1 = LOREM;
+        printf("lorem: %ld\n", ft_strlen(ret1));
+
+        /* segfault */
+
+        /*ret1 = NULL;
+        printf("[%s]: %ld\n", ret1, ft_strlen(ret1));*/
+    }
+}
+
+/* write */
+
+static void write_test(void)
+{
+    printf("\n=== write ===\n");
+    {
+        write(1, "STD:\n", 5);
+        int fd = STDOUT_FILENO;
+        int status = 0;
+        write(fd, "[\"", 2);
+        status = write(fd, "STDOUT_FILENO", 13);
+        write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+        
+        fd = STDERR_FILENO;
+        write(fd, "[\"", 2);
+        status = write(fd, "STDERR_FILENO", 13);
+        write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        fd = STDOUT_FILENO;
+        write(fd, "[\"", 2);
+        status = write(fd, WORD, 8);
+        write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        write(fd, "[\"", 2);
+        status = write(fd, WORD, 4);
+        write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        /* warning */
+
+        /*write(fd, "[\"", 2);
+        status = write(fd, WORD, 13);
+        write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        fd = STDOUT_FILENO;
+        write(fd, "[\"", 2);
+        status = write(fd, "abcdefghijklmnopqrstuvwxyz\n", -1);
+        write(fd, "\"]: ", 4);
+        printf("%d\n", status);*/
+
+        /* end */
+
+        fd = open(WRITE_STD, O_WRONLY | O_TRUNC);
+        status = write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
+        printf("write in %s: %d\n", WRITE_STD, status);
+        close(fd);
+
+        fd = open(ERROR, O_WRONLY | O_TRUNC);
+        status = write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
+        printf("write in %s: %d\n", ERROR, status);
+    }
+    {
+        ft_write(1, "\nFT:\n", 5);
+        int fd = STDOUT_FILENO;
+        int status = 0;
+        ft_write(fd, "[\"", 2);
+        status = ft_write(fd, "STDOUT_FILENO", 13);
+        ft_write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+        
+        fd = STDERR_FILENO;
+        ft_write(fd, "[\"", 2);
+        status = ft_write(fd, "STDERR_FILENO", 13);
+        ft_write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        fd = STDOUT_FILENO;
+        ft_write(fd, "[\"", 2);
+        status = ft_write(fd, WORD, 8);
+        ft_write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        ft_write(fd, "[\"", 2);
+        status = ft_write(fd, WORD, 4);
+        ft_write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        /* warning */
+
+        /*ft_write(fd, "[\"", 2);
+        status = ft_write(fd, WORD, 13);
+        ft_write(fd, "\"]: ", 4);
+        printf("%d\n", status);
+
+        fd = STDOUT_FILENO;
+        ft_write(fd, "[\"", 2);
+        status = ft_write(fd, "abcdefghijklmnopqrstuvwxyz\n", -1);
+        ft_write(fd, "\"]: ", 4);
+        printf("%d\n", status);*/
+
+        /* end */
+
+        fd = open(WRITE_FT, O_WRONLY | O_TRUNC);
+        status = ft_write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
+        printf("write in %s: %d\n", WRITE_STD, status);
+        close(fd);
+
+        fd = open(ERROR, O_WRONLY | O_TRUNC);
+        status = ft_write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
+        printf("write in %s: %d\n", ERROR, status);
+    }
+}
+
+/* read */
+
+static void read_test()
+{
+    printf("\n=== read ===\n");
+    {
+
+    }
+    {
+        
+    }
 }
 
 int main(void)
 {
-    // write_test();
-    // read_test();
-    // strlen_test();
+    read_test();
+    //write_test();
+    //strlen_test();
     // strcmp_test();
     // strcpy_test();
-    strdup_test();
+    // strdup_test();
 }

@@ -2,12 +2,26 @@
 
 # create directory
 
-mkdir file lib
+if [ ! -d ./lib ]; then
+  mkdir lib
+fi
+
+if [ ! -d ./file ]; then
+  mkdir file
+fi
+
+if [ ! -d ./file/read ]; then
+  mkdir file/read
+fi
+
+if [ ! -d ./file/write ]; then
+  mkdir file/write
+fi
 
 # create file
 
-echo "abcdefghijklmnopqrstuvwxyz" > file/alphabet.txt
-echo -en "first line\n| second line\n| third line\n| " > file/with_nl.txt
+echo "abcdefghijklmnopqrstuvwxyz" > file/read/alphabet.txt
+echo -en "first line\n| second line\n| third line\n| " > file/read/with_nl.txt
 
 echo -e "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit dictum nisl facilisis convallis.\n\
 | Pellentesque eu sodales augue, pellentesque condimentum libero. Nulla non vulputate urna. Morbi accumsan pretium ornare.\n\
@@ -24,6 +38,6 @@ echo -e "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blan
 | Morbi a risus condimentum, lacinia nisl quis, blandit purus. Vestibulum dignissim leo non augue cursus rhoncus.\n\
 | Etiam purus odio, lacinia vitae orci sit amet, hendrerit cursus est. Vivamus interdum fermentum aliquet.\n\
 | In hac habitasse platea dictumst. Curabitur laoreet iaculis lorem in suscipit. Donec magna turpis, pulvinar ut consequat id, imperdiet quis leo.\n\
-| Ut lobortis, felis varius accumsan fringilla, justo purus sodales leo, vitae pellentesque lacus erat et dui." > file/little_lorem.txt
+| Ut lobortis, felis varius accumsan fringilla, justo purus sodales leo, vitae pellentesque lacus erat et dui." > file/read/little_lorem.txt
 
-touch file/write_test.txt file/empty.txt
+touch file/write/std_write.txt file/write/ft_write.txt file/read/empty.txt
