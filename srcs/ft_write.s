@@ -9,13 +9,16 @@ section .text
     global ft_write
 
 ft_write:
-    mov rax, SYS_WRITE      ; set write syscall
-    syscall         ; call write
-    test rax, rax   ; check if rax is null or neg
-    js _error       ; jump to _error if rax is neg
-    ret             ; return
+    mov rax, SYS_WRITE
+    syscall
+    cmp rax, 0
+    jl _error
+    ret
 
 _error:
+    neg rax
+    mov rdi, rax
     call __errno_location WRT ..plt
-    mov rax, _ERROR     ; set return value to -1
-    ret             ; return
+    mov [rax], rdi
+    mov rax, _ERROR
+    ret

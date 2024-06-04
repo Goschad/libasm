@@ -2,21 +2,7 @@
 
 # create directory
 
-if [ ! -d ./lib ]; then
-  mkdir lib
-fi
-
-if [ ! -d ./file ]; then
-  mkdir file
-fi
-
-if [ ! -d ./file/read ]; then
-  mkdir file/read
-fi
-
-if [ ! -d ./file/write ]; then
-  mkdir file/write
-fi
+mkdir -p lib file file/read file/write
 
 # create file
 

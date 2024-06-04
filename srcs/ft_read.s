@@ -11,11 +11,14 @@ section .text
 ft_read:
     mov rax, SYS_READ
     syscall
-    test rax, rax
-    js _error
+    cmp rax, 0
+    jl _error
     ret
 
 _error:
+    neg rax
+    mov rdi, rax
     call __errno_location WRT ..plt
+    mov [rax], rdi
     mov rax, _ERROR
     ret

@@ -188,104 +188,94 @@ static void write_test(void)
 {
     printf("\n=== write ===\n\n");
     {
-        write(1, "STD:\n", 5);
+        errno = 0;
+        printf("STD:\n");
         int fd = STDOUT_FILENO;
         int status = 0;
-        write(fd, "[\"", 2);
         status = write(fd, "STDOUT_FILENO", 13);
-        write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
         
+        errno = 0;
         fd = STDERR_FILENO;
-        write(fd, "[\"", 2);
         status = write(fd, "STDERR_FILENO", 13);
-        write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
+        errno = 0;
         fd = STDOUT_FILENO;
-        write(fd, "[\"", 2);
         status = write(fd, WORD, 8);
-        write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
-        write(fd, "[\"", 2);
+        errno = 0;
         status = write(fd, WORD, 4);
-        write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
         /* warning */
 
-        /*write(fd, "[\"", 2);
+        /*errno = 0;
         status = write(fd, WORD, 13);
-        write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
+        errno = 0;
         fd = STDOUT_FILENO;
-        write(fd, "[\"", 2);
         status = write(fd, "abcdefghijklmnopqrstuvwxyz\n", -1);
-        write(fd, "\"]: ", 4);
-        printf("%d\n", status);*/
+        printf("%s: %d\n", strerror(errno), status);*/
 
         /* end */
 
+        errno = 0;
         fd = open(WRITE_STD, O_WRONLY | O_TRUNC);
         status = write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
-        printf("write in %s: %d\n", WRITE_STD, status);
+        printf("write in %s: %s: %d\n", WRITE_FT, strerror(errno), status);
         close(fd);
 
         fd = open(ERROR, O_WRONLY | O_TRUNC);
         status = write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
-        printf("write in %s: %d\n", ERROR, status);
+        printf("write in %s: %s: %d\n", ERROR, strerror(errno), status);
     }
     {
-        ft_write(1, "\nFT:\n", 5);
+        errno = 0;
+        printf("\nFT:\n");
         int fd = STDOUT_FILENO;
         int status = 0;
-        ft_write(fd, "[\"", 2);
         status = ft_write(fd, "STDOUT_FILENO", 13);
-        ft_write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
         
+        errno = 0;
         fd = STDERR_FILENO;
-        ft_write(fd, "[\"", 2);
         status = ft_write(fd, "STDERR_FILENO", 13);
-        ft_write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
+        errno = 0;
         fd = STDOUT_FILENO;
-        ft_write(fd, "[\"", 2);
         status = ft_write(fd, WORD, 8);
-        ft_write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
-        ft_write(fd, "[\"", 2);
+        errno = 0;
         status = ft_write(fd, WORD, 4);
-        ft_write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
-        /* warning */
+        /* warning in std */
 
-        /*ft_write(fd, "[\"", 2);
+        /*errno = 0;
         status = ft_write(fd, WORD, 13);
-        ft_write(fd, "\"]: ", 4);
-        printf("%d\n", status);
+        printf(": %s: %d\n", strerror(errno), status);
 
+        errno = 0;
         fd = STDOUT_FILENO;
-        ft_write(fd, "[\"", 2);
         status = ft_write(fd, "abcdefghijklmnopqrstuvwxyz\n", -1);
-        ft_write(fd, "\"]: ", 4);
-        printf("%d\n", status);*/
+        printf("%s: %d\n", strerror(errno), status);*/
 
         /* end */
 
+        errno = 0;
         fd = open(WRITE_FT, O_WRONLY | O_TRUNC);
         status = ft_write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
-        printf("write in %s: %d\n", WRITE_STD, status);
+        printf("write in %s: %s: %d\n", WRITE_FT, strerror(errno), status);
         close(fd);
 
         fd = open(ERROR, O_WRONLY | O_TRUNC);
         status = ft_write(fd, "abcdefghijklmnopqrstuvwxyz\n", 27);
-        printf("write in %s: %d\n", ERROR, status);
+        printf("write in %s: %s: %d\n", ERROR, strerror(errno), status);
     }
 }
 
@@ -295,7 +285,7 @@ static void read_test()
 {
     printf("=== read ===\n");
     {
-        int errno = 0;
+        errno = 0;
         int fd = open(NL_FILE, O_RDONLY);
 	    char std_buffer[11];
 	    char ft_buffer[11];
@@ -305,9 +295,11 @@ static void read_test()
         printf("\n[%s]\n", NL_FILE);
 	    res1 = read(fd, std_buffer, 10);
         printf("STD: %s\n", strerror(errno));
+        errno = 0;
 	    lseek(fd, 0, SEEK_SET);
 	    res2 = ft_read(fd, ft_buffer, 10);
         printf("FT: %s\n", strerror(errno));
+        errno = 0;
 	    printf("std: %ld | ft: %ld\n", res1, res2);
 	    std_buffer[res1] = '\0';
 	    ft_buffer[res2] = '\0';
@@ -315,39 +307,56 @@ static void read_test()
         close(fd);
     }
     {
-        int errno = 0;
         int fd = open(LITTLE_LOREM, O_RDONLY);
 	    char std_buffer[21];
 	    char ft_buffer[21];
         ssize_t res1;
         ssize_t res2;
+        errno = 0;
 
         printf("[%s]\n", LITTLE_LOREM);
 	    res1 = read(fd, std_buffer, 20);
         printf("STD: %s\n", strerror(errno));
+        errno = 0;
 	    lseek(fd, 0, SEEK_SET);
 	    res2 = ft_read(fd, ft_buffer, 20);
         printf("FT: %s\n", strerror(errno));
+        errno = 0;
 	    printf("std: %ld | ft: %ld\n", res1, res2);
 	    std_buffer[res1] = '\0';
 	    ft_buffer[res2] = '\0';
-	    printf("std_buffer: [%s] | ft_buffer: [%s]\n\n", std_buffer, ft_buffer);
+	    printf("std_buffer: [%s] | ft_buffer: [%s]\n", std_buffer, ft_buffer);
+
+        lseek(fd, 0, SEEK_SET);
+        res1 = read(fd, std_buffer, 20);
+        res1 += read(fd, std_buffer, 10);
+        printf("STD: %s\n", strerror(errno));
+        errno = 0;
+	    lseek(fd, 0, SEEK_SET);
+	    res2 = ft_read(fd, ft_buffer, 20);
+        res2 = ft_read(fd, ft_buffer, 10);
+        printf("\nstd: %ld | ft: %ld\n", res1, res2);
+        std_buffer[res1] = '\0';
+	    ft_buffer[res2] = '\0';
+        printf("std_buffer: [%s] | ft_buffer: [%s]\n\n", std_buffer, ft_buffer);
         close(fd);
     }
     {
-        int errno = 0;
         int fd = open(EMPT, O_RDONLY);
 	    char std_buffer[21];
 	    char ft_buffer[21];
         ssize_t res1;
         ssize_t res2;
+        errno = 0;
 
         printf("[%s]\n", EMPT);
 	    res1 = read(fd, std_buffer, 20);
         printf("STD: %s\n", strerror(errno));
+        errno = 0;
 	    lseek(fd, 0, SEEK_SET);
 	    res2 = ft_read(fd, ft_buffer, 20);
         printf("FT: %s\n", strerror(errno));
+        errno = 0;
 	    printf("std: %ld | ft: %ld\n", res1, res2);
 	    std_buffer[res1] = '\0';
 	    ft_buffer[res2] = '\0';
@@ -355,18 +364,20 @@ static void read_test()
         close(fd);
     }
     {
-        int errno = 0;
         int fd = open(NL_FILE, O_RDONLY);
 	    char std_buffer[11];
 	    char ft_buffer[11];
         ssize_t res1;
         ssize_t res2;
+        errno = 0;
         
         printf("[%s]\n", "fd = 400");
 	    res1 = read(400, std_buffer, 10);
 		printf("STD: %s\n", strerror(errno));
+        errno = 0;
 	    res2 = ft_read(400, ft_buffer, 10);
 		printf("FT: %s\n", strerror(errno));
+        errno = 0;
 	    printf("std: %ld | ft: %ld\n", res1, res2);
 
 	    if (res1 != -1)
@@ -379,7 +390,7 @@ static void read_test()
     {
         /* warning */
 
-        /*int errno = 0;
+        /*errno = 0;
         int fd = open(ALPH, O_RDONLY);
 	    char std_buffer[27];
 	    char ft_buffer[27];
@@ -406,8 +417,8 @@ int main(void)
 {
     read_test();
     write_test();
-    /*strlen_test();
+    strlen_test();
     strcmp_test();
     strcpy_test();
-    strdup_test();*/
+    strdup_test();
 }

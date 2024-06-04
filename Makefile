@@ -1,6 +1,6 @@
 NAME = libasm.a
 
-RUN_NAME = libasm_test
+RUN_NAME = a.out
 
 SRCS =	srcs/ft_write.s \
 		srcs/ft_read.s \
@@ -11,38 +11,31 @@ SRCS =	srcs/ft_write.s \
 
 T_FILE = main/main.c
 
-LIB = lib/
-
 OBJS = $(SRCS:.s=.o)
 
-OBJS_C = $(T_FILE.c=.o)
+LIB = lib/
 
-all: $(NAME) run
+%.o: %.s
+	nasm -f elf64 $< -o $@
 
-$(NAME) : nasm $(OBJS) 
+all: $(LIB)$(NAME)
+
+$(LIB)$(NAME) : $(OBJS)
 	@./bash/libasm_test.sh
 	@ar -rcs $(LIB)$(NAME) $(OBJS)
 
-
-nasm: 
-	nasm -f elf64 srcs/ft_strlen.s
-	nasm -f elf64 srcs/ft_strcpy.s
-	nasm -f elf64 srcs/ft_write.s
-	nasm -f elf64 srcs/ft_strcmp.s
-	nasm -f elf64 srcs/ft_strdup.s
-	nasm -f elf64 srcs/ft_read.s
-
-run: $(OBJS_C) $(NAME)
-	@gcc -o $(RUN_NAME) $(T_FILE) -L. $(LIB)$(NAME)
-
 clean:
-	@rm -rf $(OBJS)
-	@rm -rf $(OBJS_C)
+	rm -rf $(OBJS)
 
 fclean: clean
-	@rm -rf $(LIB)$(NAME)
+	rm -rf $(LIB)$(NAME)
+	rm -rf file lib
+
+run: fclean all
+	@gcc $(T_FILE) $(LIB)$(NAME)
+	@clear
+	@./$(RUN_NAME)
 	@rm -rf $(RUN_NAME)
-	@rm -rf file lib
+
 
 re: fclean all
-
